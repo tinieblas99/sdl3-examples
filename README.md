@@ -10,48 +10,63 @@ Includes a custom `SDL_RenderTextureRotatedEx` function added to the [SDL3 fork]
 | `sdl3-basic` | SDL3 + SDL3_image + SDL3_mixer. Rotating/tinted textures, per-vertex color via `SDL_RenderTextureRotatedEx`, looping OGG music. |
 | `sdl3-imgui` | `main.cpp` — SDL scene in a dockable ImGui panel. `main2.cpp` — ImGui overlaid directly on the SDL scene. |
 
-## Setup
+---
 
-### 1. Install system dependencies (Ubuntu/Debian)
+## Full setup from a fresh machine (Ubuntu/Debian)
+
+### 1. Clone this repository
 ```bash
-./scripts/install-deps-linux.sh
-# For Windows cross-compilation:
-sudo apt install mingw-w64
+git clone https://github.com/tinieblas99/sdl3-examples
+cd sdl3-examples
 ```
 
-### 2. Clone SDL3 and dependencies
+### 2. Install system build dependencies
+```bash
+./scripts/install-deps-linux.sh
+```
+Installs cmake, gcc, and all X11/Wayland/audio/image dev libraries needed to compile SDL3 and its companions.
+
+### 3. Clone SDL3 and companion libraries
 ```bash
 ./scripts/setup.sh
 ```
-This clones the following repos **next to** this repository:
-- `../SDL3` — SDL3 fork (with `SDL_RenderTextureRotatedEx`)
-- `../SDL3_image`
-- `../SDL3_mixer`
-- `../imgui` — docking branch (required for sdl3-imgui)
+Clones the following repos **as siblings** of this repository (i.e. next to `sdl3-examples/`):
+- `SDL3` — the SDL3 fork with the custom `SDL_RenderTextureRotatedEx`
+- `SDL3_image` — official SDL3_image
+- `SDL3_mixer` — official SDL3_mixer
+- `imgui` — Dear ImGui docking branch (needed for the `sdl3-imgui` example)
 
-### 3. Build the libraries
-
-**Linux:**
+### 4. Build the libraries
 ```bash
 ./scripts/build-linux.sh
-# Installs to ../SDL3-linux/  (override: ./scripts/build-linux.sh /your/prefix)
 ```
+Compiles SDL3, SDL3_image, and SDL3_mixer (both shared and static) and installs them to `../SDL3-linux/`.
 
-**Windows (cross-compile from Linux):**
-```bash
-./scripts/build-windows.sh
-# Installs to ../SDL3-win64/  (override: ./scripts/build-windows.sh /your/prefix)
-```
+> **Windows cross-compilation** (from Linux, requires `sudo apt install mingw-w64`):
+> ```bash
+> ./scripts/build-windows.sh
+> ```
+> Installs DLLs and import/static libs to `../SDL3-win64/`.
 
-### 4. Build an example
+### 5. Build and run an example
 ```bash
-cd sdl3-basic        # or sdl3-imgui
+# SDL3 basic example
+cd sdl3-basic
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ./build/sdl3_example
+
+# ImGui example (docked scene panel)
+cd ../sdl3-imgui
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+./build/sdl3_imgui_example   # docked panels
+./build/sdl3_imgui_overlay   # ImGui overlaid on SDL scene
 ```
 
-## Directory layout (after setup)
+---
+
+## Directory layout after setup
 
 ```
 parent/
@@ -59,10 +74,10 @@ parent/
 │   ├── scripts/
 │   ├── sdl3-basic/
 │   └── sdl3-imgui/
-├── SDL3/               ← cloned by setup.sh
-├── SDL3_image/
-├── SDL3_mixer/
-├── imgui/
-├── SDL3-linux/         ← created by build-linux.sh
-└── SDL3-win64/         ← created by build-windows.sh
+├── SDL3/               ← SDL3 fork (setup.sh)
+├── SDL3_image/         ← (setup.sh)
+├── SDL3_mixer/         ← (setup.sh)
+├── imgui/              ← docking branch (setup.sh)
+├── SDL3-linux/         ← built libs (build-linux.sh)
+└── SDL3-win64/         ← Windows libs (build-windows.sh)
 ```
