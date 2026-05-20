@@ -3,11 +3,14 @@ project(sdl3_imgui_example)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Default to the SDL3-linux install produced by scripts/build-linux.sh
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../SDL3-linux")
+
 find_package(SDL3 REQUIRED)
 find_package(SDL3_image REQUIRED)
 find_package(SDL3_mixer REQUIRED)
 
-set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../imgui")
+set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../imgui")
 
 add_executable(sdl3_imgui_overlay
     main2.cpp
